@@ -7,6 +7,7 @@ const speedInput = document.getElementById('speed');
 const arraySizeValue = document.getElementById('arraySizeValue');
 const speedValue = document.getElementById('speedValue');
 
+// Update display values for size and speed inputs
 arraySizeInput.addEventListener('input', () => {
     arraySizeValue.textContent = arraySizeInput.value;
 });
@@ -15,9 +16,11 @@ speedInput.addEventListener('input', () => {
     speedValue.textContent = speedInput.value + 'ms';
 });
 
+// Event listeners for buttons
 document.getElementById('randomizeBtn').addEventListener('click', randomizeArray);
 document.getElementById('startBtn').addEventListener('click', startVisualization);
-document.getElementById('stopBtn').addEventListener('click', stopVisualization); // Stop button event
+document.getElementById('stopBtn').addEventListener('click', stopVisualization);
+document.getElementById('algorithmSelect').addEventListener('change', updateColors);
 
 function randomizeArray() {
     const size = parseInt(arraySizeInput.value);
@@ -32,11 +35,19 @@ function drawArray(highlightIndex = -1) {
         const bar = document.createElement('div');
         bar.className = 'bar';
         bar.style.height = value * 3 + 'px'; // Scale bar height
-        bar.style.backgroundColor = (index === highlightIndex) ? '#ffffff' : getBarColor(); // Highlight color for the current index
+
+        // Set colors
+        if (index === highlightIndex) {
+            bar.style.backgroundColor = '#ffffff'; // Highlight color for the current index
+        } else {
+            bar.style.backgroundColor = getBarColor(); // Color for the rest
+        }
+
         visualizationDiv.appendChild(bar);
     });
 }
 
+// Set bar color based on the selected algorithm
 function getBarColor() {
     const algorithm = document.getElementById('algorithmSelect').value;
     switch (algorithm) {
@@ -51,24 +62,47 @@ function getBarColor() {
     }
 }
 
+// Update button and slider colors based on the selected algorithm
+function updateColors() {
+    const buttonColor = getBarColor(); // Get the color based on the selected algorithm
+    const buttons = document.querySelectorAll('button');
+    const sliders = document.querySelectorAll('input[type="range"]');
+
+    // Update button colors
+    buttons.forEach(button => {
+        button.style.backgroundColor = buttonColor;
+        button.style.color = '#fff'; // Set text color to white for better visibility
+    });
+
+    // Update slider colors
+    sliders.forEach(slider => {
+        slider.style.backgroundColor = buttonColor; // Update slider track color
+    });
+}
+
+// Start sorting visualization
 async function startVisualization() {
     const algorithm = document.getElementById('algorithmSelect').value;
     isStopped = false; // Reset stop flag before starting
-    if (algorithm === 'bubbleSort') {
-        await bubbleSort(array);
-    } else if (algorithm === 'quickSort') {
-        await quickSort(array, 0, array.length - 1);
-    } else if (algorithm === 'mergeSort') {
-        await mergeSort(array, 0, array.length - 1);
+    switch (algorithm) {
+        case 'bubbleSort':
+            await bubbleSort(array);
+            break;
+        case 'quickSort':
+            await quickSort(array, 0, array.length - 1);
+            break;
+        case 'mergeSort':
+            await mergeSort(array, 0, array.length - 1);
+            break;
     }
 }
 
-// Function to stop the sorting
+// Stop the sorting
 function stopVisualization() {
     isStopped = true; // Set stop flag to true
 }
 
-// Example Bubble Sort Algorithm
+// Bubble Sort Algorithm
 async function bubbleSort(arr) {
     const len = arr.length;
     for (let i = 0; i < len && !isStopped; i++) {
@@ -81,10 +115,11 @@ async function bubbleSort(arr) {
                 await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
             }
         }
+        drawArray(); // Update the array visualization after each outer loop iteration
     }
 }
 
-// Example Quick Sort Algorithm
+// Quick Sort Algorithm
 async function quickSort(arr, left, right) {
     if (left < right && !isStopped) {
         const pivotIndex = await partition(arr, left, right);
@@ -112,7 +147,7 @@ async function partition(arr, left, right) {
     return i + 1;
 }
 
-// Example Merge Sort Algorithm
+// Merge Sort Algorithm
 async function mergeSort(arr, left, right) {
     if (left < right && !isStopped) {
         const mid = Math.floor((left + right) / 2);
