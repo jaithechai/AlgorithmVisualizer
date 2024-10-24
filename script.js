@@ -1,4 +1,3 @@
-// script.js
 let array = [];
 let isStopped = false; // Variable to track if sorting should stop
 const visualizationDiv = document.getElementById('visualization');
@@ -31,9 +30,13 @@ function randomizeArray() {
 
 function drawArray(highlightIndex = -1) {
     visualizationDiv.innerHTML = '';
+    const containerWidth = visualizationDiv.clientWidth; // Get the width of the container
+    const barWidth = Math.max(2, containerWidth / array.length); // Ensure minimum width for bars
+
     array.forEach((value, index) => {
         const bar = document.createElement('div');
         bar.className = 'bar';
+        bar.style.width = barWidth + 'px'; // Set dynamic width
         bar.style.height = value * 3 + 'px'; // Scale bar height
 
         // Set colors
@@ -77,6 +80,7 @@ function updateColors() {
     // Update slider colors
     sliders.forEach(slider => {
         slider.style.backgroundColor = buttonColor; // Update slider track color
+        slider.style.color = '#fff'; // Optional: Set text color on sliders
     });
 }
 
