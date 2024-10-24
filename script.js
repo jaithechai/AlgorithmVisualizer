@@ -1,5 +1,6 @@
 // script.js
 let array = [];
+let isStopped = false; // Variable to track if sorting should stop
 const visualizationDiv = document.getElementById('visualization');
 const arraySizeInput = document.getElementById('arraySize');
 const speedInput = document.getElementById('speed');
@@ -16,10 +17,12 @@ speedInput.addEventListener('input', () => {
 
 document.getElementById('randomizeBtn').addEventListener('click', randomizeArray);
 document.getElementById('startBtn').addEventListener('click', startVisualization);
+document.getElementById('stopBtn').addEventListener('click', stopVisualization); // Stop button event
 
 function randomizeArray() {
     const size = parseInt(arraySizeInput.value);
     array = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+    isStopped = false; // Reset stop flag when randomizing
     drawArray();
 }
 
@@ -50,6 +53,7 @@ function getBarColor() {
 
 async function startVisualization() {
     const algorithm = document.getElementById('algorithmSelect').value;
+    isStopped = false; // Reset stop flag before starting
     if (algorithm === 'bubbleSort') {
         await bubbleSort(array);
     } else if (algorithm === 'quickSort') {
@@ -59,11 +63,16 @@ async function startVisualization() {
     }
 }
 
+// Function to stop the sorting
+function stopVisualization() {
+    isStopped = true; // Set stop flag to true
+}
+
 // Example Bubble Sort Algorithm
 async function bubbleSort(arr) {
     const len = arr.length;
-    for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len - 1; j++) {
+    for (let i = 0; i < len && !isStopped; i++) {
+        for (let j = 0; j < len - 1 && !isStopped; j++) {
             drawArray(j); // Highlight the current bar being compared
             if (arr[j] > arr[j + 1]) {
                 // Swap
@@ -77,7 +86,7 @@ async function bubbleSort(arr) {
 
 // Example Quick Sort Algorithm
 async function quickSort(arr, left, right) {
-    if (left < right) {
+    if (left < right && !isStopped) {
         const pivotIndex = await partition(arr, left, right);
         await quickSort(arr, left, pivotIndex - 1);
         await quickSort(arr, pivotIndex + 1, right);
@@ -89,7 +98,7 @@ async function partition(arr, left, right) {
     const pivot = arr[right];
     let i = left - 1;
 
-    for (let j = left; j < right; j++) {
+    for (let j = left; j < right && !isStopped; j++) {
         drawArray(j); // Highlight the current bar being compared
         if (arr[j] < pivot) {
             i++;
@@ -105,7 +114,7 @@ async function partition(arr, left, right) {
 
 // Example Merge Sort Algorithm
 async function mergeSort(arr, left, right) {
-    if (left < right) {
+    if (left < right && !isStopped) {
         const mid = Math.floor((left + right) / 2);
         await mergeSort(arr, left, mid);
         await mergeSort(arr, mid + 1, right);
@@ -118,7 +127,7 @@ async function merge(arr, left, mid, right) {
     const rightArr = arr.slice(mid + 1, right + 1);
     let i = 0, j = 0, k = left;
 
-    while (i < leftArr.length && j < rightArr.length) {
+    while (i < leftArr.length && j < rightArr.length && !isStopped) {
         drawArray(k); // Highlight the current index being written
         if (leftArr[i] <= rightArr[j]) {
             arr[k] = leftArr[i];
@@ -131,7 +140,7 @@ async function merge(arr, left, mid, right) {
         k++;
     }
 
-    while (i < leftArr.length) {
+    while (i < leftArr.length && !isStopped) {
         arr[k] = leftArr[i];
         drawArray(k); // Highlight the current index being written
         await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
@@ -139,7 +148,7 @@ async function merge(arr, left, mid, right) {
         k++;
     }
 
-    while (j < rightArr.length) {
+    while (j < rightArr.length && !isStopped) {
         arr[k] = rightArr[j];
         drawArray(k); // Highlight the current index being written
         await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
