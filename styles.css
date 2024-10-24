@@ -1,43 +1,107 @@
 /* styles.css */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 20px;
+    font-family: 'Arial', sans-serif; /* Font style */
+    background-color: #000000; /* Black background */
+    color: #ffffff; /* White text color */
+    margin: 0; /* Remove default margin */
+    padding: 20px; /* Padding around the body */
 }
 
 .container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Max width for the container */
+    margin: auto; /* Center the container */
+    background: #222222; /* Dark gray background for the container */
+    padding: 20px; /* Inner padding */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1); /* Subtle shadow for depth */
 }
 
 h1 {
-    text-align: center;
+    text-align: center; /* Center align heading */
+    color: #ffffff; /* White text color for heading */
+    margin-bottom: 20px; /* Space below heading */
 }
 
 label {
-    display: block;
-    margin-top: 10px;
+    display: block; /* Block display for labels */
+    margin-top: 10px; /* Space above labels */
+    color: #cccccc; /* Light gray for labels */
 }
 
 input[type="range"] {
-    width: 100%;
+    width: 100%; /* Full width for range input */
+    margin-top: 10px; /* Space above range input */
+    background: #444444; /* Dark background for range input */
+    height: 8px; /* Height for the range slider */
+    border-radius: 4px; /* Rounded corners */
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    width: 15px; /* Width for thumb */
+    height: 15px; /* Height for thumb */
+    background: #ffffff; /* White thumb */
+    border-radius: 50%; /* Round thumb */
+    cursor: pointer; /* Pointer cursor on hover */
 }
 
 #visualization {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 300px;
-    margin-top: 20px;
+    display: flex; /* Flexbox for layout */
+    justify-content: center; /* Center bars horizontally */
+    align-items: flex-end; /* Align bars at the bottom */
+    height: 300px; /* Fixed height for visualization area */
+    margin-top: 20px; /* Space above visualization */
+    background-color: #111111; /* Darker background for the visualization */
+    border: 1px solid #555555; /* Medium gray border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1); /* Subtle shadow */
 }
 
 .bar {
-    width: 15px;
-    margin: 0 2px;
-    background-color: #3498db;
+    width: 15px; /* Fixed width for bars */
+    margin: 0 2px; /* Horizontal spacing between bars */
+    background-color: #3498db; /* Default bar color */
+    border-radius: 4px; /* Rounded corners for bars */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.bar:hover {
+    background-color: #2980b9; /* Darker shade on hover */
+}
+
+/* Button styles */
+button {
+    background-color: #007bff; /* Primary button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-top: 20px; /* Space above button */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Additional media query for responsiveness */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px; /* Reduce padding on smaller screens */
+    }
+
+    button {
+        width: 100%; /* Full width button on smaller screens */
+    }
+
+    #visualization {
+        height: 200px; /* Reduced height for visualization on smaller screens */
+    }
+
+    .bar {
+        width: 10px; /* Adjust bar width on smaller screens */
+    }
 }

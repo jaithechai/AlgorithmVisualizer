@@ -23,14 +23,29 @@ function randomizeArray() {
     drawArray();
 }
 
-function drawArray() {
+function drawArray(highlightIndex = -1) {
     visualizationDiv.innerHTML = '';
-    array.forEach(value => {
+    array.forEach((value, index) => {
         const bar = document.createElement('div');
         bar.className = 'bar';
         bar.style.height = value * 3 + 'px'; // Scale bar height
+        bar.style.backgroundColor = (index === highlightIndex) ? '#ffffff' : getBarColor(); // Highlight color for the current index
         visualizationDiv.appendChild(bar);
     });
+}
+
+function getBarColor() {
+    const algorithm = document.getElementById('algorithmSelect').value;
+    switch (algorithm) {
+        case 'bubbleSort':
+            return '#3498db'; // Blue for Bubble Sort
+        case 'quickSort':
+            return '#9b59b6'; // Purple for Quick Sort
+        case 'mergeSort':
+            return '#e74c3c'; // Red for Merge Sort
+        default:
+            return '#3498db'; // Default color
+    }
 }
 
 async function startVisualization() {
@@ -49,10 +64,11 @@ async function bubbleSort(arr) {
     const len = arr.length;
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len - 1; j++) {
+            drawArray(j); // Highlight the current bar being compared
             if (arr[j] > arr[j + 1]) {
                 // Swap
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-                drawArray(); // Update visualization
+                drawArray(j); // Highlight the current bar being swapped
                 await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
             }
         }
@@ -74,15 +90,16 @@ async function partition(arr, left, right) {
     let i = left - 1;
 
     for (let j = left; j < right; j++) {
+        drawArray(j); // Highlight the current bar being compared
         if (arr[j] < pivot) {
             i++;
             [arr[i], arr[j]] = [arr[j], arr[i]];
-            drawArray(); // Update visualization
+            drawArray(i); // Highlight the current bar being swapped
             await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
         }
     }
     [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
-    drawArray(); // Update visualization
+    drawArray(i + 1); // Highlight the pivot
     return i + 1;
 }
 
@@ -102,6 +119,7 @@ async function merge(arr, left, mid, right) {
     let i = 0, j = 0, k = left;
 
     while (i < leftArr.length && j < rightArr.length) {
+        drawArray(k); // Highlight the current index being written
         if (leftArr[i] <= rightArr[j]) {
             arr[k] = leftArr[i];
             i++;
@@ -109,14 +127,13 @@ async function merge(arr, left, mid, right) {
             arr[k] = rightArr[j];
             j++;
         }
-        drawArray(); // Update visualization
         await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
         k++;
     }
 
     while (i < leftArr.length) {
         arr[k] = leftArr[i];
-        drawArray(); // Update visualization
+        drawArray(k); // Highlight the current index being written
         await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
         i++;
         k++;
@@ -124,7 +141,7 @@ async function merge(arr, left, mid, right) {
 
     while (j < rightArr.length) {
         arr[k] = rightArr[j];
-        drawArray(); // Update visualization
+        drawArray(k); // Highlight the current index being written
         await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
         j++;
         k++;
