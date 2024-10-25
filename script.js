@@ -1,18 +1,13 @@
 let array = [];
-let isStopped = false; // Variable to track if sorting should stop
+let isStopped = false; // if sorting should stop
 const visualizationDiv = document.getElementById('visualization');
 const arraySizeInput = document.getElementById('arraySize');
 const speedInput = document.getElementById('speed');
 const arraySizeValue = document.getElementById('arraySizeValue');
-const speedValue = document.getElementById('speedValue');
 
-// Update display values for size and speed inputs
+// Update display values for size input
 arraySizeInput.addEventListener('input', () => {
     arraySizeValue.textContent = arraySizeInput.value;
-});
-
-speedInput.addEventListener('input', () => {
-    speedValue.textContent = speedInput.value + 'ms';
 });
 
 // Event listeners for buttons
@@ -69,19 +64,16 @@ function getBarColor() {
 function updateColors() {
     const buttonColor = getBarColor(); // Get the color based on the selected algorithm
     const buttons = document.querySelectorAll('button');
-    const sliders = document.querySelectorAll('input[type="range"]');
-
+    
     // Update button colors
     buttons.forEach(button => {
         button.style.backgroundColor = buttonColor;
-        button.style.color = '#fff'; // Set text color to white for better visibility
+        button.style.color = '#fff';
     });
 
-    // Update slider colors
-    sliders.forEach(slider => {
-        slider.style.backgroundColor = buttonColor; // Update slider track color
-        slider.style.color = '#fff'; // Optional: Set text color on sliders
-    });
+    // Update slider colors using CSS variables
+    document.documentElement.style.setProperty('--slider-track-color', buttonColor);
+    document.documentElement.style.setProperty('--slider-thumb-color', buttonColor);
 }
 
 // Start sorting visualization
@@ -116,7 +108,7 @@ async function bubbleSort(arr) {
                 // Swap
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
                 drawArray(j); // Highlight the current bar being swapped
-                await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
+                await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
             }
         }
         drawArray(); // Update the array visualization after each outer loop iteration
@@ -143,7 +135,7 @@ async function partition(arr, left, right) {
             i++;
             [arr[i], arr[j]] = [arr[j], arr[i]];
             drawArray(i); // Highlight the current bar being swapped
-            await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
+            await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         }
     }
     [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
@@ -175,14 +167,14 @@ async function merge(arr, left, mid, right) {
             arr[k] = rightArr[j];
             j++;
         }
-        await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         k++;
     }
 
     while (i < leftArr.length && !isStopped) {
         arr[k] = leftArr[i];
         drawArray(k); // Highlight the current index being written
-        await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         i++;
         k++;
     }
@@ -190,7 +182,7 @@ async function merge(arr, left, mid, right) {
     while (j < rightArr.length && !isStopped) {
         arr[k] = rightArr[j];
         drawArray(k); // Highlight the current index being written
-        await new Promise(resolve => setTimeout(resolve, speedInput.value)); // Delay
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         j++;
         k++;
     }
