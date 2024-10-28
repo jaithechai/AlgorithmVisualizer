@@ -1,51 +1,51 @@
 let array = [];
-let isStopped = false;
+let isStopped = false; // if sorting should stop
 const visualizationDiv = document.getElementById('visualization');
 const arraySizeInput = document.getElementById('arraySize');
 const speedInput = document.getElementById('speed');
+const arraySizeValue = document.getElementById('arraySizeValue');
 
+// Update display values for size input
 arraySizeInput.addEventListener('input', () => {
-    updateArraySize();
+    arraySizeValue.textContent = arraySizeInput.value;
 });
 
+// Event listeners for buttons
 document.getElementById('randomizeBtn').addEventListener('click', randomizeArray);
 document.getElementById('startBtn').addEventListener('click', startVisualization);
 document.getElementById('stopBtn').addEventListener('click', stopVisualization);
 document.getElementById('algorithmSelect').addEventListener('change', updateColors);
 
-function updateArraySize() {
-    const maxSize = Math.floor(visualizationDiv.clientWidth / 5); 
-    arraySizeInput.max = maxSize;
-}
-
 function randomizeArray() {
     const size = parseInt(arraySizeInput.value);
-    array = Array.from({ length: size }, () => Math.floor((Math.random() + 0.001) * 100));
-    isStopped = false;
+    array = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+    isStopped = false; // Reset stop flag when randomizing
     drawArray();
 }
 
 function drawArray(highlightIndex = -1) {
     visualizationDiv.innerHTML = '';
-    const containerWidth = visualizationDiv.clientWidth;
-    const barWidth = Math.max(2, containerWidth / array.length);
+    const containerWidth = visualizationDiv.clientWidth; // Get the width of the container
+    const barWidth = Math.max(2, containerWidth / array.length); // Ensure minimum width for bars
 
     array.forEach((value, index) => {
         const bar = document.createElement('div');
         bar.className = 'bar';
-        bar.style.width = barWidth + 'px';
-        bar.style.height = value * 3 + 'px';
+        bar.style.width = barWidth + 'px'; // Set dynamic width
+        bar.style.height = value * 3 + 'px'; // Scale bar height
 
+        // Set colors
         if (index === highlightIndex) {
-            bar.style.backgroundColor = 'white'; 
+            bar.style.backgroundColor = '#ffffff'; // Highlight color for the current index
         } else {
-            bar.style.backgroundColor = getBarColor();
+            bar.style.backgroundColor = getBarColor(); // Color for the rest
         }
 
         visualizationDiv.appendChild(bar);
     });
 }
 
+// Set bar color based on the selected algorithm
 function getBarColor() {
     const algorithm = document.getElementById('algorithmSelect').value;
     switch (algorithm) {
@@ -60,22 +60,33 @@ function getBarColor() {
     }
 }
 
+// Update button and slider colors based on the selected algorithm
 function updateColors() {
-    const buttonColor = getBarColor(); 
+    const buttonColor = getBarColor(); // Get the color based on the selected algorithm
     const buttons = document.querySelectorAll('button');
-    
+    const bars = document.querySelectorAll('.bar');
+
+    // Update button colors
     buttons.forEach(button => {
         button.style.backgroundColor = buttonColor;
         button.style.color = '#fff';
     });
 
+    // Update slider colors using CSS variables
     document.documentElement.style.setProperty('--slider-track-color', buttonColor);
     document.documentElement.style.setProperty('--slider-thumb-color', buttonColor);
+
+    // Update bar colors
+    bars.forEach(bar => {
+        bar.style.backgroundColor = buttonColor;
+    });
 }
 
+
+// Start sorting visualization
 async function startVisualization() {
     const algorithm = document.getElementById('algorithmSelect').value;
-    isStopped = false; 
+    isStopped = false; // Reset stop flag before starting
     switch (algorithm) {
         case 'bubbleSort':
             await bubbleSort(array);
@@ -89,8 +100,9 @@ async function startVisualization() {
     }
 }
 
+// Stop the sorting
 function stopVisualization() {
-    isStopped = true; 
+    isStopped = true; // Set stop flag to true
 }
 
 // Bubble Sort Algorithm
@@ -103,10 +115,10 @@ async function bubbleSort(arr) {
                 // Swap
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
                 drawArray(j); // Highlight the current bar being swapped
-                await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
+                await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
             }
         }
-        drawArray(); 
+        drawArray(); // Update the array visualization after each outer loop iteration
     }
 }
 
@@ -117,7 +129,7 @@ async function quickSort(arr, left, right) {
         await quickSort(arr, left, pivotIndex - 1);
         await quickSort(arr, pivotIndex + 1, right);
     }
-    drawArray(); 
+    drawArray(); // Update visualization
 }
 
 async function partition(arr, left, right) {
@@ -130,11 +142,11 @@ async function partition(arr, left, right) {
             i++;
             [arr[i], arr[j]] = [arr[j], arr[i]];
             drawArray(i); // Highlight the current bar being swapped
-            await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
+            await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         }
     }
     [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
-    drawArray(i + 1); 
+    drawArray(i + 1); // Highlight the pivot
     return i + 1;
 }
 
@@ -154,7 +166,7 @@ async function merge(arr, left, mid, right) {
     let i = 0, j = 0, k = left;
 
     while (i < leftArr.length && j < rightArr.length && !isStopped) {
-        drawArray(k); 
+        drawArray(k); // Highlight the current index being written
         if (leftArr[i] <= rightArr[j]) {
             arr[k] = leftArr[i];
             i++;
@@ -162,14 +174,14 @@ async function merge(arr, left, mid, right) {
             arr[k] = rightArr[j];
             j++;
         }
-        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value));
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         k++;
     }
 
     while (i < leftArr.length && !isStopped) {
         arr[k] = leftArr[i];
         drawArray(k); // Highlight the current index being written
-        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         i++;
         k++;
     }
@@ -177,7 +189,7 @@ async function merge(arr, left, mid, right) {
     while (j < rightArr.length && !isStopped) {
         arr[k] = rightArr[j];
         drawArray(k); // Highlight the current index being written
-        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
         j++;
         k++;
     }
