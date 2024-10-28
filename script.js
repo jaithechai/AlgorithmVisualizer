@@ -20,7 +20,7 @@ function updateArraySize() {
 
 function randomizeArray() {
     const size = parseInt(arraySizeInput.value);
-    array = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+    array = Array.from({ length: size }, () => Math.floor((Math.random() + 0.001) * 100));
     isStopped = false;
     drawArray();
 }
