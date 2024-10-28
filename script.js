@@ -4,19 +4,17 @@ const visualizationDiv = document.getElementById('visualization');
 const arraySizeInput = document.getElementById('arraySize');
 const speedInput = document.getElementById('speed');
 
-// Update display values for size input
 arraySizeInput.addEventListener('input', () => {
     updateArraySize();
 });
 
-// Event listeners for buttons
 document.getElementById('randomizeBtn').addEventListener('click', randomizeArray);
 document.getElementById('startBtn').addEventListener('click', startVisualization);
 document.getElementById('stopBtn').addEventListener('click', stopVisualization);
 document.getElementById('algorithmSelect').addEventListener('change', updateColors);
 
 function updateArraySize() {
-    const maxSize = Math.floor(visualizationDiv.clientWidth / 5); // Adjust this value as needed
+    const maxSize = Math.floor(visualizationDiv.clientWidth / 5); 
     arraySizeInput.max = maxSize;
 }
 
@@ -38,18 +36,16 @@ function drawArray(highlightIndex = -1) {
         bar.style.width = barWidth + 'px';
         bar.style.height = value * 3 + 'px';
 
-        // Highlight the bar if it's the current index
         if (index === highlightIndex) {
-            bar.style.backgroundColor = 'white'; // Highlight color
+            bar.style.backgroundColor = 'white'; 
         } else {
-            bar.style.backgroundColor = getBarColor(); // Normal color
+            bar.style.backgroundColor = getBarColor();
         }
 
         visualizationDiv.appendChild(bar);
     });
 }
 
-// Set bar color based on the selected algorithm
 function getBarColor() {
     const algorithm = document.getElementById('algorithmSelect').value;
     switch (algorithm) {
@@ -64,26 +60,22 @@ function getBarColor() {
     }
 }
 
-// Update button and slider colors based on the selected algorithm
 function updateColors() {
-    const buttonColor = getBarColor(); // Get the color based on the selected algorithm
+    const buttonColor = getBarColor(); 
     const buttons = document.querySelectorAll('button');
     
-    // Update button colors
     buttons.forEach(button => {
         button.style.backgroundColor = buttonColor;
         button.style.color = '#fff';
     });
 
-    // Update slider colors using CSS variables
     document.documentElement.style.setProperty('--slider-track-color', buttonColor);
     document.documentElement.style.setProperty('--slider-thumb-color', buttonColor);
 }
 
-// Start sorting visualization
 async function startVisualization() {
     const algorithm = document.getElementById('algorithmSelect').value;
-    isStopped = false; // Reset stop flag before starting
+    isStopped = false; 
     switch (algorithm) {
         case 'bubbleSort':
             await bubbleSort(array);
@@ -97,9 +89,8 @@ async function startVisualization() {
     }
 }
 
-// Stop the sorting
 function stopVisualization() {
-    isStopped = true; // Set stop flag to true
+    isStopped = true; 
 }
 
 // Bubble Sort Algorithm
@@ -112,10 +103,10 @@ async function bubbleSort(arr) {
                 // Swap
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
                 drawArray(j); // Highlight the current bar being swapped
-                await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
+                await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
             }
         }
-        drawArray(); // Update the array visualization after each outer loop iteration
+        drawArray(); 
     }
 }
 
@@ -126,7 +117,7 @@ async function quickSort(arr, left, right) {
         await quickSort(arr, left, pivotIndex - 1);
         await quickSort(arr, pivotIndex + 1, right);
     }
-    drawArray(); // Update visualization
+    drawArray(); 
 }
 
 async function partition(arr, left, right) {
@@ -139,11 +130,11 @@ async function partition(arr, left, right) {
             i++;
             [arr[i], arr[j]] = [arr[j], arr[i]];
             drawArray(i); // Highlight the current bar being swapped
-            await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
+            await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
         }
     }
     [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
-    drawArray(i + 1); // Highlight the pivot
+    drawArray(i + 1); 
     return i + 1;
 }
 
@@ -163,7 +154,7 @@ async function merge(arr, left, mid, right) {
     let i = 0, j = 0, k = left;
 
     while (i < leftArr.length && j < rightArr.length && !isStopped) {
-        drawArray(k); // Highlight the current index being written
+        drawArray(k); 
         if (leftArr[i] <= rightArr[j]) {
             arr[k] = leftArr[i];
             i++;
@@ -171,14 +162,14 @@ async function merge(arr, left, mid, right) {
             arr[k] = rightArr[j];
             j++;
         }
-        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value));
         k++;
     }
 
     while (i < leftArr.length && !isStopped) {
         arr[k] = leftArr[i];
         drawArray(k); // Highlight the current index being written
-        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
         i++;
         k++;
     }
@@ -186,7 +177,7 @@ async function merge(arr, left, mid, right) {
     while (j < rightArr.length && !isStopped) {
         arr[k] = rightArr[j];
         drawArray(k); // Highlight the current index being written
-        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); // Directly use slider value
+        await new Promise(resolve => setTimeout(resolve, 1001 - speedInput.value)); 
         j++;
         k++;
     }
