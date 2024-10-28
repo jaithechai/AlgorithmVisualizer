@@ -27,6 +27,7 @@ label {
     color: #cccccc;
 }
 
+/* Enhanced slider styles */
 input[type="range"] {
     width: 100%;
     margin-top: 10px;
@@ -38,6 +39,7 @@ input[type="range"] {
     transition: background-color 0.1s ease;
 }
 
+/* Webkit (Chrome, Safari, Edge) slider thumb */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -47,10 +49,11 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.1s ease;
-    position: relative;
-    top: -3px;
+    position: relative; /* Added line */
+    top: -3px; /* Adjust the value to center the thumb */
 }
 
+/* Firefox slider thumb */
 input[type="range"]::-moz-range-thumb {
     width: 15px;
     height: 15px;
@@ -59,22 +62,26 @@ input[type="range"]::-moz-range-thumb {
     cursor: pointer;
     border: none;
     transition: background-color 0.1s ease;
-    position: relative;
-    top: -3px;
+    position: relative; /* Added line */
+    top: -3px; /* Adjust the value to center the thumb */
 }
 
+
+/* Webkit slider track */
 input[type="range"]::-webkit-slider-runnable-track {
     background: var(--slider-track-color, #3498db);
     border-radius: 4px;
     height: 8px;
 }
 
+/* Firefox slider track */
 input[type="range"]::-moz-range-track {
     background: var(--slider-track-color, #3498db);
     border-radius: 4px;
     height: 8px;
 }
 
+/* RTL slider styles for speed control */
 input[type="range"][style*="direction: rtl"] {
     transform: scaleX(-1);
 }
@@ -88,8 +95,6 @@ input[type="range"][style*="direction: rtl"]::-moz-range-thumb {
 }
 
 #visualization {
-    width: 100%;
-    height: 300px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -100,6 +105,7 @@ input[type="range"][style*="direction: rtl"]::-moz-range-thumb {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
     padding: 10px;
+    overflow-x: auto;
 }
 
 .bar {
@@ -115,6 +121,7 @@ input[type="range"][style*="direction: rtl"]::-moz-range-thumb {
     filter: brightness(1.2);
 }
 
+/* Button styles */
 button {
     background-color: #007bff;
     color: white;
@@ -136,6 +143,7 @@ button:active {
     transform: translateY(0);
 }
 
+/* Algorithm-specific colors */
 .bubble-button {
     background-color: #3498db;
 }
@@ -152,6 +160,7 @@ button:active {
     background-color: white;
 }
 
+/* Controls container */
 .controls {
     display: flex;
     flex-direction: column;
@@ -159,6 +168,7 @@ button:active {
     margin-bottom: 20px;
 }
 
+/* Value display styles */
 .value-display {
     display: inline-block;
     min-width: 60px;
@@ -167,6 +177,7 @@ button:active {
     color: #cccccc;
 }
 
+/* Responsive design */
 @media (max-width: 600px) {
     .container {
         padding: 15px;
@@ -191,6 +202,7 @@ button:active {
     }
 }
 
+/* Select element styles */
 select {
     background-color: #333333;
     color: white;
@@ -207,6 +219,7 @@ select:focus {
     border-color: var(--slider-track-color, #3498db);
 }
 
+/* Improved spacing and organization */
 .algorithm-controls {
     margin-bottom: 20px;
 }
@@ -225,6 +238,7 @@ select:focus {
     margin-top: 20px;
 }
 
+/* Tooltip styles */
 [data-tooltip] {
     position: relative;
 }
